@@ -1,6 +1,7 @@
 # Doctor Appointment Booking System
 
 This Java project is a console-based application for managing doctor appointments. Users can view available doctors, search by specialty, view doctor details, book appointments, and view booked appointments.
+![DoctorAppointment](https://github.com/user-attachments/assets/ac494f63-e43a-4082-b0b6-a65cd3979ba2)
 
 ## Table of Contents
 - [Features](#features)
