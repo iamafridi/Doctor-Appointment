@@ -55,7 +55,7 @@ public class Main {
                     } else {
                         System.out.println("Doctors found:");
                         for (int i = 0; i < doctors.size(); i++) {
-                            System.out.println((i + 1) + ". " + doctors.get(i).getName() + " - Specialty: " + doctors.get(i).getSpecialty() + ", Available Times: " + doctors.get(i).getAvailableTimes());
+                            System.out.println((i + 1) + ". " + doctors.get(i).getName() + " - Specialty: " + doctors.get(i).getSpecialty());
                         }
                     }
                     break;
@@ -65,20 +65,41 @@ public class Main {
                         System.out.println("Please search for doctors first.");
                         break;
                     }
-                    System.out.print("Enter patient name: ");
-                    String patientName = scanner.nextLine();
-                    System.out.print("Enter patient ID: ");
-                    int patientId = scanner.nextInt();
-                    Patient patient = new Patient(patientName, patientId);
 
+                    // Allow user to select a doctor to book an appointment
                     System.out.print("Enter the number of the doctor you wish to book an appointment with: ");
                     int doctorIndex = scanner.nextInt() - 1; // adjust for zero-based indexing
 
                     if (doctorIndex >= 0 && doctorIndex < doctors.size()) {
                         Doctor selectedDoctor = doctors.get(doctorIndex);
-                        System.out.print("Enter time for appointment: ");
-                        String time = scanner.next();
-                        hospital.bookAppointment(selectedDoctor, patient, time);
+                        List<String> availableTimes = hospital.getAvailableTimeSlots(selectedDoctor);
+
+                        if (availableTimes.isEmpty()) {
+                            System.out.println("No available time slots for " + selectedDoctor.getName());
+                        } else {
+                            System.out.println("Available time slots for " + selectedDoctor.getName() + ":");
+                            for (int i = 0; i < availableTimes.size(); i++) {
+                                System.out.println((i + 1) + ". " + availableTimes.get(i));
+                            }
+
+                            System.out.print("Select a time slot by number: ");
+                            int timeSlotIndex = scanner.nextInt() - 1; // adjust for zero-based indexing
+
+                            if (timeSlotIndex >= 0 && timeSlotIndex < availableTimes.size()) {
+                                String selectedTime = availableTimes.get(timeSlotIndex);
+                                System.out.print("Enter patient name: ");
+                                scanner.nextLine(); // consume newline
+                                String patientName = scanner.nextLine();
+                                System.out.print("Enter patient ID: ");
+                                int patientId = scanner.nextInt();
+                                Patient patient = new Patient(patientName, patientId);
+
+                                // Book the appointment
+                                hospital.bookAppointment(selectedDoctor, patient, selectedTime);
+                            } else {
+                                System.out.println("Invalid time slot selection.");
+                            }
+                        }
                     } else {
                         System.out.println("Invalid doctor selection.");
                     }

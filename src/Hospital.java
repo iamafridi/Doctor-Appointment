@@ -22,7 +22,6 @@ public class Hospital {
         patients.add(patient);
     }
 
-    // Retrieve a unique list of specialties from the available doctors
     public Set<String> getAvailableSpecialties() {
         Set<String> specialties = new HashSet<>();
         for (Doctor doctor : doctors) {
@@ -41,16 +40,22 @@ public class Hospital {
         return result;
     }
 
-    public boolean bookAppointment(Doctor doctor, Patient patient, String time) {
+    public List<String> getAvailableTimeSlots(Doctor doctor) {
+        return doctor.getAvailableTimes();
+    }
+
+    public void bookAppointment(Doctor doctor, Patient patient, String time) {
         if (doctor.getAvailableTimes().contains(time)) {
             Appointment appointment = new Appointment(doctor, patient, time);
             appointments.add(appointment);
             doctor.removeAvailableTime(time);
             System.out.println("Appointment booked successfully!");
-            return true;
         } else {
-            System.out.println("Time slot unavailable.");
-            return false;
+            System.out.println("Time slot unavailable. Available time slots are:");
+            List<String> availableTimes = doctor.getAvailableTimes();
+            for (String availableTime : availableTimes) {
+                System.out.println("- " + availableTime);
+            }
         }
     }
 
