@@ -3,12 +3,12 @@ import java.util.List;
 public class Doctor {
     private final String name;
     private final String specialty;
-    private final List<String> availableTimeSlots;
+    private final List<String> timeSlots;
 
-    public Doctor(String name, String specialty, List<String> availableTimeSlots) {
+    public Doctor(String name, String specialty, List<String> timeSlots) {
         this.name = name;
         this.specialty = specialty;
-        this.availableTimeSlots = availableTimeSlots;
+        this.timeSlots = timeSlots;
     }
 
     public String getName() {
@@ -19,7 +19,7 @@ public class Doctor {
         return specialty;
     }
 
-    public List<String> getAvailableTimeSlots() {
-        return availableTimeSlots;
+    public List<String> getTimeSlots() {
+        return timeSlots;
     }
 }

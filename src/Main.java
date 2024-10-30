@@ -1,33 +1,47 @@
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final Hospital hospital = new Hospital();
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Hospital hospital = new Hospital();
-        initializeHospitalData(hospital);
+        initializeData();
 
         while (true) {
-            displayMainMenu();
-            int choice = getValidInput(scanner, 1, 6);
+            showMainMenu();
+            int choice = getUserChoice(1, 6);
 
             switch (choice) {
-                case 1 -> listDoctors(hospital, scanner);
-                case 2 -> searchDoctorBySpecialty(hospital, scanner);
-                case 3 -> viewDoctorDetails(hospital, scanner);
-                case 4 -> bookAppointment(hospital, scanner);
-                case 5 -> viewBookedAppointments(hospital);
+                case 1 -> listDoctors();
+                case 2 -> searchDoctorBySpecialty();
+                case 3 -> viewAndBookAppointment();
+                case 4 -> bookAppointment();
+                case 5 -> viewBookedAppointments();
                 case 6 -> {
-                    System.out.println("Exiting the program. Goodbye!");
-                    scanner.close();
-                    System.exit(0);
+                    try (scanner) {
+                        System.out.println("Exiting...");
+                    }
+                    return;
                 }
+
+                default -> System.out.println("Invalid choice. Please select a valid option.");
             }
         }
     }
 
-    private static void displayMainMenu() {
+ 
+    private static void initializeData() {
+        Doctor doctor1 = new Doctor("Dr. Saidul Islam", "Dermatologist", new ArrayList<>(Arrays.asList("9:00 AM", "10:00 AM", "11:00 AM")));
+        Doctor doctor2 = new Doctor("Dr. Ishrat", "Cardiologist", new ArrayList<>(Arrays.asList("9:00 AM", "10:00 AM", "11:00 AM", "2:00 PM", "4:00 PM")));
+        Doctor doctor3 = new Doctor("Dr. Jahin Mahtab", "Pediatrician", new ArrayList<>(Arrays.asList("9:00 AM", "12:00 PM", "3:00 PM")));
+        
+        hospital.addDoctor(doctor1);
+        hospital.addDoctor(doctor2);
+        hospital.addDoctor(doctor3);
+    }
+    
+
+    private static void showMainMenu() {
         System.out.println("\n--- Main Menu ---");
         System.out.println("1. List all doctors");
         System.out.println("2. Search doctor by specialty");
@@ -38,103 +52,93 @@ public class Main {
         System.out.print("Enter your choice (1-6): ");
     }
 
-    private static int getValidInput(Scanner scanner, int min, int max) {
-        int choice;
-        while (true) {
+    private static int getUserChoice(int min, int max) {
+        int choice = -1;
+        while (choice < min || choice > max) {
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                scanner.nextLine();  // Consume newline
-                if (choice >= min && choice <= max) {
-                    break;
-                }
+                scanner.nextLine(); // clear the buffer
             } else {
-                scanner.next();  // Consume invalid input
+                System.out.println("Invalid input. Please enter a number between " + min + " and " + max + ".");
+                scanner.nextLine(); // clear the invalid input
             }
-            System.out.print("Invalid choice. Please enter a number from " + min + " to " + max + ": ");
         }
         return choice;
     }
 
-    private static void initializeHospitalData(Hospital hospital) {
-        List<String> timeSlots = Arrays.asList("9:00 AM", "10:00 AM", "11:00 AM", "2:00 PM", "4:00 PM");
+    private static void listDoctors() {
+        System.out.println("\n--- List of All Doctors ---");
+        List<Doctor> doctors = hospital.getDoctors();
+        
+        for (int i = 0; i < doctors.size(); i++) {
+            System.out.println((i + 1) + ". " + doctors.get(i).getName() + " - " + doctors.get(i).getSpecialty());
+        }
+        System.out.println((doctors.size() + 1) + ". Back to Main Menu");
 
-        hospital.addDoctor(new Doctor("Dr. Saidul Islam", "Dermatologist", timeSlots));
-        hospital.addDoctor(new Doctor("Dr. Ishrat", "Cardiologist", timeSlots));
-        hospital.addDoctor(new Doctor("Dr. Jahin Mahtab", "Pediatrician", timeSlots));
-    }
-
-    private static void listDoctors(Hospital hospital, Scanner scanner) {
-        while (true) {
-            System.out.println("\n--- List of All Doctors ---");
-            for (int i = 0; i < hospital.getDoctors().size(); i++) {
-                System.out.println((i + 1) + ". " + hospital.getDoctors().get(i).getName() + " - " + hospital.getDoctors().get(i).getSpecialty());
-            }
-            System.out.println((hospital.getDoctors().size() + 1) + ". Back to Main Menu");
-            int choice = getValidInput(scanner, 1, hospital.getDoctors().size() + 1);
-
-            if (choice == hospital.getDoctors().size() + 1) return;
-
-            Doctor selectedDoctor = hospital.getDoctors().get(choice - 1);
-            System.out.println("\nSelected Doctor: " + selectedDoctor.getName());
-            viewAndBookAppointment(hospital, selectedDoctor, scanner);
+        int doctorChoice = getUserChoice(1, doctors.size() + 1);
+        if (doctorChoice <= doctors.size()) {
+            viewDoctorDetails(doctors.get(doctorChoice - 1));
         }
     }
 
-    private static void searchDoctorBySpecialty(Hospital hospital, Scanner scanner) {
-        System.out.print("\nEnter specialty to search: ");
-        String specialty = scanner.nextLine();
-        boolean found = false;
-        System.out.println("\n--- Doctors with Specialty: " + specialty + " ---");
-        for (Doctor doctor : hospital.getDoctors()) {
-            if (doctor.getSpecialty().equalsIgnoreCase(specialty)) {
-                System.out.println(doctor.getName());
-                found = true;
-            }
+    private static void viewDoctorDetails(Doctor doctor) {
+        System.out.println("\n--- Doctor Details ---");
+        System.out.println("Name: " + doctor.getName());
+        System.out.println("Specialty: " + doctor.getSpecialty());
+        System.out.println("Available Time Slots:");
+        
+        List<String> timeSlots = doctor.getTimeSlots();
+        for (int i = 0; i < timeSlots.size(); i++) {
+            System.out.println((i + 1) + ". " + timeSlots.get(i));
         }
-        if (!found) {
-            System.out.println("No doctors found with that specialty.");
-        }
-    }
+        System.out.println((timeSlots.size() + 1) + ". Back to Doctor List");
 
-    private static void viewDoctorDetails(Hospital hospital, Scanner scanner) {
-        listDoctors(hospital, scanner);
-    }
-
-    private static void bookAppointment(Hospital hospital, Scanner scanner) {
-        listDoctors(hospital, scanner);
-    }
-
-    private static void viewBookedAppointments(Hospital hospital) {
-        System.out.println("\n--- List of Booked Appointments ---");
-        if (hospital.getAppointments().isEmpty()) {
-            System.out.println("No appointments booked.");
-        } else {
-            for (Appointment appointment : hospital.getAppointments()) {
-                System.out.println("Doctor: " + appointment.getDoctor().getName() + ", Patient: " + appointment.getPatient().getName() + ", Time Slot: " + appointment.getTimeSlot());
-            }
-        }
-    }
-
-    private static void viewAndBookAppointment(Hospital hospital, Doctor doctor, Scanner scanner) {
-        while (true) {
-            System.out.println("\nAvailable Time Slots for " + doctor.getName() + ":");
-            for (int i = 0; i < doctor.getAvailableTimeSlots().size(); i++) {
-                System.out.println((i + 1) + ". " + doctor.getAvailableTimeSlots().get(i));
-            }
-            System.out.println((doctor.getAvailableTimeSlots().size() + 1) + ". Back to Doctor List");
-            int choice = getValidInput(scanner, 1, doctor.getAvailableTimeSlots().size() + 1);
-
-            if (choice == doctor.getAvailableTimeSlots().size() + 1) return;
-
-            String timeSlot = doctor.getAvailableTimeSlots().get(choice - 1);
-            System.out.print("Enter patient's name for booking: ");
+        int slotChoice = getUserChoice(1, timeSlots.size() + 1);
+        if (slotChoice <= timeSlots.size()) {
+            System.out.print("Enter patient name: ");
             String patientName = scanner.nextLine();
             Patient patient = new Patient(patientName);
-            hospital.bookAppointment(patient, doctor, choice - 1);
-            System.out.println("Appointment booked successfully for " + patientName + " with Dr. " + doctor.getName() + " at " + timeSlot);
+            hospital.bookAppointment(patient, doctor, timeSlots.get(slotChoice - 1));
+            System.out.println("Appointment booked successfully!\n");
 
-            viewBookedAppointments(hospital);
-            break;  // After booking, exit to view booked appointments.
+            viewBookedAppointments(); // Show booked appointments after booking
+        }
+    }
+
+    private static void viewAndBookAppointment() {
+        listDoctors();
+    }
+
+    private static void bookAppointment() {
+        System.out.println("Please choose a doctor first from the list.");
+        listDoctors();
+    }
+
+    private static void searchDoctorBySpecialty() {
+        System.out.print("Enter specialty to search: ");
+        String specialty = scanner.nextLine();
+        List<Doctor> doctors = hospital.findDoctorsBySpecialty(specialty);
+        
+        if (doctors.isEmpty()) {
+            System.out.println("No doctors found with specialty: " + specialty);
+        } else {
+            System.out.println("\n--- Search Results ---");
+            for (int i = 0; i < doctors.size(); i++) {
+                System.out.println((i + 1) + ". " + doctors.get(i).getName() + " - " + doctors.get(i).getSpecialty());
+            }
+        }
+    }
+
+    private static void viewBookedAppointments() {
+        System.out.println("\n--- All Booked Appointments ---");
+        List<Appointment> appointments = hospital.getAppointments();
+        
+        if (appointments.isEmpty()) {
+            System.out.println("No appointments booked.");
+        } else {
+            for (Appointment appointment : appointments) {
+                System.out.println(appointment);
+            }
         }
     }
 }

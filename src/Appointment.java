@@ -1,23 +1,19 @@
 public class Appointment {
-    private final Doctor doctor;
     private final Patient patient;
-    private final String timeSlot;
+    private final Doctor doctor;
+    private final String time;
 
-    public Appointment(Doctor doctor, Patient patient, String timeSlot) {
-        this.doctor = doctor;
+    public Appointment(Patient patient, Doctor doctor, String time) {
         this.patient = patient;
-        this.timeSlot = timeSlot;
+        this.doctor = doctor;
+        this.time = time;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public String getTimeSlot() {
-        return timeSlot;
+    @Override
+    public String toString() {
+        return "Appointment Details:\n" +
+                "Doctor: " + doctor.getName() + " (" + doctor.getSpecialty() + ")\n" +
+                "Patient: " + patient.getName() + " (ID: " + patient.getId() + ")\n" +
+                "Time: " + time;
     }
 }
