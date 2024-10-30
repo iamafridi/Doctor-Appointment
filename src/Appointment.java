@@ -1,12 +1,12 @@
 public class Appointment {
-    private Doctor doctor;
-    private Patient patient;
-    private String time;
+    private final Doctor doctor;
+    private final Patient patient;
+    private final String timeSlot;
 
-    public Appointment(Doctor doctor, Patient patient, String time) {
+    public Appointment(Doctor doctor, Patient patient, String timeSlot) {
         this.doctor = doctor;
         this.patient = patient;
-        this.time = time;
+        this.timeSlot = timeSlot;
     }
 
     public Doctor getDoctor() {
@@ -17,12 +17,7 @@ public class Appointment {
         return patient;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    @Override
-    public String toString() {
-        return "Appointment with Dr. " + doctor.getName() + " for patient " + patient.getName() + " at " + time;
+    public String getTimeSlot() {
+        return timeSlot;
     }
 }

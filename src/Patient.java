@@ -1,17 +1,11 @@
 public class Patient {
-    private String name;
-    private int id;
+    private final String name;
 
-    public Patient(String name, int id) {
+    public Patient(String name) {
         this.name = name;
-        this.id = id;
     }
 
     public String getName() {
         return name;
-    }
-
-    public int getId() {
-        return id;
     }
 }

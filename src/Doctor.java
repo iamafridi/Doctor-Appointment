@@ -1,15 +1,14 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public class Doctor {
-    private String name;
-    private String specialty;
-    private List<String> availableTimes;
+    private final String name;
+    private final String specialty;
+    private final List<String> availableTimeSlots;
 
-    public Doctor(String name, String specialty) {
+    public Doctor(String name, String specialty, List<String> availableTimeSlots) {
         this.name = name;
         this.specialty = specialty;
-        this.availableTimes = new ArrayList<>();
+        this.availableTimeSlots = availableTimeSlots;
     }
 
     public String getName() {
@@ -20,15 +19,7 @@ public class Doctor {
         return specialty;
     }
 
-    public List<String> getAvailableTimes() {
-        return availableTimes;
-    }
-
-    public void addAvailableTime(String time) {
-        availableTimes.add(time);
-    }
-
-    public void removeAvailableTime(String time) {
-        availableTimes.remove(time);
+    public List<String> getAvailableTimeSlots() {
+        return availableTimeSlots;
     }
 }

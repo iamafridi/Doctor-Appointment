@@ -1,12 +1,11 @@
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Hospital {
-    private List<Doctor> doctors;
-    private List<Patient> patients;
-    private List<Appointment> appointments;
+    private final List<Doctor> doctors;
+    @SuppressWarnings("unused")
+    private final List<Patient> patients;
+    private final List<Appointment> appointments;
 
     public Hospital() {
         doctors = new ArrayList<>();
@@ -14,22 +13,17 @@ public class Hospital {
         appointments = new ArrayList<>();
     }
 
+    // Add doctor to the list
     public void addDoctor(Doctor doctor) {
         doctors.add(doctor);
     }
 
-    public void addPatient(Patient patient) {
-        patients.add(patient);
+    // Getter for doctors list
+    public List<Doctor> getDoctors() {
+        return doctors;
     }
 
-    public Set<String> getAvailableSpecialties() {
-        Set<String> specialties = new HashSet<>();
-        for (Doctor doctor : doctors) {
-            specialties.add(doctor.getSpecialty());
-        }
-        return specialties;
-    }
-
+    // Method to search doctors by specialty
     public List<Doctor> searchDoctorBySpecialty(String specialty) {
         List<Doctor> result = new ArrayList<>();
         for (Doctor doctor : doctors) {
@@ -40,36 +34,17 @@ public class Hospital {
         return result;
     }
 
-    public List<String> getAvailableTimeSlots(Doctor doctor) {
-        return doctor.getAvailableTimes();
+    // Method to book an appointment
+    public void bookAppointment(Patient patient, Doctor doctor, int timeSlotIndex) {
+        String timeSlot = doctor.getAvailableTimeSlots().get(timeSlotIndex);
+        Appointment appointment = new Appointment(doctor, patient, timeSlot);
+        appointments.add(appointment);
+        doctor.getAvailableTimeSlots().remove(timeSlotIndex); // Mark timeslot as booked
+        System.out.println("Appointment booked successfully for " + patient.getName() + " with " + doctor.getName() + " at " + timeSlot);
     }
 
-    public void bookAppointment(Doctor doctor, Patient patient, String time) {
-        if (doctor.getAvailableTimes().contains(time)) {
-            Appointment appointment = new Appointment(doctor, patient, time);
-            appointments.add(appointment);
-            doctor.removeAvailableTime(time);
-            System.out.println("Appointment booked successfully!");
-        } else {
-            System.out.println("Time slot unavailable. Available time slots are:");
-            List<String> availableTimes = doctor.getAvailableTimes();
-            for (String availableTime : availableTimes) {
-                System.out.println("- " + availableTime);
-            }
-        }
-    }
-
-    public void listAppointments() {
-        if (appointments.isEmpty()) {
-            System.out.println("No appointments booked.");
-        } else {
-            for (Appointment appointment : appointments) {
-                System.out.println(appointment);
-            }
-        }
-    }
-
-    public List<Doctor> getDoctors() {
-        return doctors;
+    // Method to get the list of appointments
+    public List<Appointment> getAppointments() {
+        return appointments;
     }
 }
