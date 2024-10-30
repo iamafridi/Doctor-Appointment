@@ -1,18 +1,39 @@
-## Getting Started
+# Doctor Appointment Booking System
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+This Java project is a console-based application for managing doctor appointments. Users can view available doctors, search by specialty, view doctor details, book appointments, and view booked appointments.
 
-## Folder Structure
+## Table of Contents
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Setup](#setup)
+- [Usage](#usage)
+- [How It Works](#how-it-works)
+- [Contributing](#contributing)
+- [License](#license)
 
-The workspace contains two folders by default, where:
+---
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Features
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+- **Doctor Listing**: View a list of doctors with their specialties.
+- **Doctor Search**: Search for doctors by specialty.
+- **Appointment Booking**: Select a doctor and a time slot to book an appointment.
+- **View Booked Appointments**: See details of all booked appointments.
+- **User-Friendly Menu**: Easily navigate through options.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## Project Structure
 
-## Dependency Management
+The project contains the following key classes:
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+- **`Main`**: Entry point of the application, handles the user interface and menu navigation.
+- **`Hospital`**: Manages doctors, patients, and appointments.
+- **`Doctor`**: Stores information about doctors, including specialties and available time slots.
+- **`Patient`**: Stores patient information, including name and unique ID.
+- **`Appointment`**: Stores appointment details, associating a doctor, patient, and time slot.
+
+## Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/iamafridi/Doctor-Appointment.git
+   cd Doctor-Appointment
